@@ -1,5 +1,7 @@
 # College Data Dashboard
 
+[Go to the dashboard hosted on Heroku](https://oneshot-dashboard.herokuapp.com/)
+
 ### A dashboard to show college details made using the MERN Stack
 
 * Shows data about how colleges are distributed by state and courses offered using pie charts
