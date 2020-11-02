@@ -184,6 +184,11 @@ app.post('/addStudent', async (req, res) => {
 
 })
 
+if(process.env.NODE_ENV==="production")
+{
+    app.use(express.static('client/build'))
+}
+
 server.listen(PORT, () => {
     console.log(`Server listening on port ${PORT} `)
 })

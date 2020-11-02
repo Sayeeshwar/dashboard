@@ -75,7 +75,7 @@ function App() {
           label: "State distribution",
           data: data.stateCount,
           backgroundColor: [
-            "#000000", "#FF0000", "#00FF00", "#C0C0C0", "#FF0000", "#00FFFF"
+            "#BED9F4", "#5EADD6", "#F0E0ED"
           ]
         }
       ]
