@@ -24,26 +24,26 @@ db.once("open", () => {
 db.on("error", console.error.bind(console, "connection error: "))
 
 app.get('/CollegesByCourse', async (req, res) => {
-    console.log("hitting /CollegesByCourse");
+    
     try {
         let i=0
         
         let courses = await College.find().distinct('courses')
-        //console.log("Distinct courses are ",courses,"courses length is: ",courses.length);
+        
         let courseCount=[]
         for (i = 0; i < courses.length; i++) {
             
-            //console.log("iteration no: ",i,"checking count of ",courses[i]," now.");
+            
             let count = await College.countDocuments({ courses: courses[i] })
-            //console.log("Count for ",courses[i]," is ",count);
+            
             courseCount[i]=count
-            //console.log('---------------')
+            
         }
         data={
             courses,
             courseCount
         }
-        console.log("byCourse returning data: ",data)
+
 
         return res.json(data)
 
@@ -54,7 +54,7 @@ app.get('/CollegesByCourse', async (req, res) => {
 })
 
 app.get('/CollegesByState', async (req, res) => {
-    console.log("hitting /CollegesByState");
+    
     try {
         let stateCount = []
         let i =0
@@ -66,9 +66,6 @@ app.get('/CollegesByState', async (req, res) => {
             states,
             stateCount
         }
-        console.log("byState returning: ",data)
-
-
         return res.json(data)
 
     }
@@ -78,28 +75,20 @@ app.get('/CollegesByState', async (req, res) => {
 })
 
 app.post('/clg', async (req, res) => {
-    console.log("hitting /clg");
     try {
         let cid = req.body.cid
-        console.log(cid);
         let clg = await College.findById(cid)
-        console.log("College: ", clg);
         let students = await Student.find({ collegeID: cid })
-        console.log("students:", students);
         let similar = await College.find({ courses: { $all: ["CSE", "EEE", "ECE", "BME"] } }, { city: clg.city, courses: 1, name: 1, founded: 1, state: 1, country: 1, studentCount: 1 }).where('studentCount').gte(clg.studentCount - 100).lte(clg.studentCount + 100)
         similar = similar.filter((college) => {
             return college._id != cid
         })
 
-
-        console.log("Similar colleges: ", similar);
         let data = {
             college: clg,
             students: students,
             similarColleges: similar
         }
-
-        console.log("returning data", data);
         return res.json({ data: data })
     }
     catch (err) {
@@ -109,27 +98,19 @@ app.post('/clg', async (req, res) => {
 })
 
 app.post('/clglist', async (req, res) => {
-    console.log("hitting /clglist");
-    // console.log("course",req.body.course);
     let colleges
     try {
         let course = req.body.course
         let state = req.body.state
-        
         if (course == "" && state == "") {
-            
             colleges = await College.find()
-            // console.log("No params",colleges)
-
         }
         else {
             if (course == "") {
                 colleges = await College.find({ state: state })
-                // console.log("state specified: ",colleges)
             }
             else {
                 colleges = await College.find({ courses: course })
-                // console.log("course specified: ",colleges)
             }
 
         }
@@ -137,15 +118,11 @@ app.post('/clglist', async (req, res) => {
     catch (err) {
         console.error("Error: ", err);
     }
-    console.log("returning college list: ",colleges);
     return res.json({ colleges: colleges })
 })
 
 app.post('/add', async (req, res) => {
     try {
-
-        console.log("new College being added")
-        console.log(req.body);
         college = new College({
             name: req.body.name,
             founded: req.body.founded,
@@ -166,9 +143,6 @@ app.post('/add', async (req, res) => {
 
 app.post('/addStudent', async (req, res) => {
     try {
-
-        console.log("new Student being added")
-        // console.log(req.body);
         student = new Student({
             name: req.body.name,
             batch: req.body.batch,

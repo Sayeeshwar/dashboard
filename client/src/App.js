@@ -9,6 +9,7 @@ import Container from "react-bootstrap/Container";
 import ListGroup from "react-bootstrap/ListGroup";
 import Accordion from "react-bootstrap/Accordion";
 import Navbar from "react-bootstrap/Navbar";
+import Nav from "react-bootstrap/Nav";
 import Tabs from "react-bootstrap/Tabs";
 import Tab from "react-bootstrap/Tab";
 function App() {
@@ -22,10 +23,8 @@ function App() {
 
   async function getClgDetails() {
     if (collegeId) {
-      console.log("gonna call /clg using", collegeId);
       let response = await axios.post("/clg", { cid: collegeId });
       let data = response.data;
-      console.log("ind clg data: ", data.data);
       setCollege(data.data);
     }
   }
@@ -42,7 +41,6 @@ function App() {
   async function getColleges(crs = "", st = "") {
     let response = await axios.post("/clglist", { course: crs, state: st });
     let data = response.data;
-    console.log(data.colleges);
     setColleges(data.colleges);
     setCollegeId(data.colleges[0]._id);
   }
@@ -101,6 +99,8 @@ function App() {
     <div className="App">
       <Container style={{ margin: 0 }} fluid>
         <Navbar
+          collapseOnSelect
+          expand="lg"
           style={{ borderRadius: "5px 5px 0px 0px", marginTop: 5 }}
           bg="light"
           variant="light"
@@ -109,6 +109,7 @@ function App() {
             style={{ marginLeft: "1vh" }}
             href="https://www.oneshot.ai/"
             target="_blank"
+            rel="noreferrer"
           >
             <img
               alt=""
@@ -117,16 +118,25 @@ function App() {
               className="d-inline-block align-top"
             />{" "}
           </Navbar.Brand>
-          <Navbar.Text style={{ marginLeft: "1vh" }}>
+          <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+
+          <Nav>
+            {/* <Navbar.Text style={{ marginLeft: "1vh" }}> */}
             <h5>College Dashboard</h5>
-          </Navbar.Text>
-          <Navbar.Collapse className="justify-content-end">
-            <Navbar.Text>
-              Developed by :{" "}
-              <a href="http://www.github.com/Sayeeshwar" target="_blank">
-                Sayeeshwar Girish
-              </a>
-            </Navbar.Text>
+            {/* </Navbar.Text> */}
+          </Nav>
+          <Navbar.Collapse
+            id="responsive-navbar-nav"
+            className="justify-content-end"
+          >
+            <Nav>
+              <Navbar.Text>
+                <h6>Developed by : </h6>
+                <a href="http://www.github.com/Sayeeshwar" target="_blank" rel="noreferrer">
+                  Sayeeshwar Girish
+                </a>
+              </Navbar.Text>
+            </Nav>
           </Navbar.Collapse>
         </Navbar>
 
@@ -143,7 +153,7 @@ function App() {
           </Navbar.Text>
         </Navbar>
         <Row>
-          <Col xs={5}>
+          <Col xs={12} lg={5}>
             <br></br>
 
             <Card style={{ borderRadius: 10 }}>
@@ -177,7 +187,7 @@ function App() {
                                   if (element.length > 0) {
                                     let ind = element[0];
 
-                                    console.log(courseData.labels[ind._index]);
+                                    // console.log(courseData.labels[ind._index]);
                                     getColleges(courseData.labels[ind._index]);
                                   }
                                 },
@@ -205,7 +215,7 @@ function App() {
                                 onClick: function (e, element) {
                                   if (element.length > 0) {
                                     let ind = element[0];
-                                    console.log(stateData.labels[ind._index]);
+                                    // console.log(stateData.labels[ind._index]);
                                     getColleges(
                                       "",
                                       stateData.labels[ind._index]
@@ -225,52 +235,55 @@ function App() {
                     </Card>
                   </Tab>
                 </Tabs>
-                <i>Click on a slice to filter the colleges list below</i>
+                <i>
+                  (Click on a slice to filter the colleges list below | Refresh
+                  page to reset filters)
+                </i>
               </Card.Body>
             </Card>
 
             {/* Shows list of colleges */}
-            <Card style={{ height: "30vh", marginTop: "5px", borderRadius: 5 }}>
+            <Card
+              className="clgList"
+              style={{ height: "31vh", marginTop: "5px", borderRadius: 5 }}
+            >
               <Card.Header>
-                <p><h5>Colleges</h5> (Pick a college to see its details)</p>
-
+                <h5>Colleges</h5>
+                <p>(Pick a college to see its details)</p>
               </Card.Header>
-              <ListGroup variant="flush" style={{ "overflow-y": "auto" }}>
+              <ListGroup variant="flush" style={{ overflowY: "auto" }}>
                 {colleges
-                  ? colleges.map((clg,ind) => {
-                    if(!ind){
-                      return(
-                    
-                        <ListGroup.Item
-                          className="collegeList"
-                          onClick={(e) => handleClick(e)}
-                          id={clg._id}
-                          style={{backgroundColor:"#5EADD6"}}
-                        >
-                          {clg.name}
-                        </ListGroup.Item>)
-
-                    }
-                    else{
-                      return(
-                    
-                        <ListGroup.Item
-                          className="collegeList"
-                          onClick={(e) => handleClick(e)}
-                          id={clg._id}
-                          
-                        >
-                          {clg.name}
-                        </ListGroup.Item>)
-                      
-                    }
-                    
-})
+                  ? colleges.map((clg, ind) => {
+                      if (!ind) {
+                        return (
+                          <ListGroup.Item
+                            className="collegeList"
+                            onClick={(e) => handleClick(e)}
+                            key={ind}
+                            id={clg._id}
+                            style={{ backgroundColor: "#5EADD6" }}
+                          >
+                            {clg.name}
+                          </ListGroup.Item>
+                        );
+                      } else {
+                        return (
+                          <ListGroup.Item
+                            key={ind}
+                            className="collegeList"
+                            onClick={(e) => handleClick(e)}
+                            id={clg._id}
+                          >
+                            {clg.name}
+                          </ListGroup.Item>
+                        );
+                      }
+                    })
                   : null}
               </ListGroup>
             </Card>
           </Col>
-          <Col xs={7}>
+          <Col xs={12} lg={7}>
             <br></br>
 
             {/* Shows individual college details */}
@@ -285,34 +298,33 @@ function App() {
               <Card.Header style={{ textAlign: "center" }}>
                 <h3>College details</h3>
               </Card.Header>
-              <Card.Body style={{ "overflow-y": "auto" }}>
+              <Card.Body style={{ overflowY: "auto" }}>
                 {college ? (
                   <div style={{ padding: "1% 4% 4% 4%" }}>
-                    <p>
-                      <h1
-                        style={{
-                          textAlign: "center",
-                          textDecoration: "underline",
-                        }}
-                      >
-                        <i>{college.college.name}</i>
-                      </h1>
+                    <h1
+                      style={{
+                        textAlign: "center",
+                        textDecoration: "underline",
+                      }}
+                    >
+                      <i>{college.college.name}</i>
+                    </h1>
+                    <ul>
+                      <li>
+                        was founded in {college.college.founded} in{" "}
+                        {college.college.city}, {college.college.state}.
+                      </li>
+                      <li>has {college.college.studentCount} students </li>
+                    </ul>
+                    <ul>
+                      <li>offers :</li>
                       <ul>
-                        <li>
-                          was founded in {college.college.founded} in{" "}
-                          {college.college.city}, {college.college.state}.
-                        </li>
-                        <li>has {college.college.studentCount} students </li>
-                      </ul>
-                      <ListGroup horizontal>
-                        <ListGroup.Item>
-                          <h6>offers :</h6>
-                        </ListGroup.Item>
-                        {college.college.courses.map((crs) => (
-                          <ListGroup.Item>{crs} </ListGroup.Item>
+                        {college.college.courses.map((crs, ind) => (
+                          <li key={ind}>{crs} </li>
                         ))}
-                      </ListGroup>
-                    </p>
+                      </ul>
+                    </ul>
+
                     <hr />
                     {college.similarColleges.length ? (
                       <div>
@@ -322,8 +334,10 @@ function App() {
                         </h6>
                         <br />
                         <ListGroup horizontal>
-                          {college.similarColleges.map((clg) => (
-                            <ListGroup.Item>{clg.name} </ListGroup.Item>
+                          {college.similarColleges.map((clg, ind) => (
+                            <ListGroup.Item key={ind}>
+                              {clg.name}{" "}
+                            </ListGroup.Item>
                           ))}
                         </ListGroup>
                       </div>
@@ -341,7 +355,7 @@ function App() {
                       defaultActiveKey="0"
                     >
                       {college.students.map((stud) => (
-                        <Card>
+                        <Card key={stud._id}>
                           <Accordion.Toggle
                             as={Card.Header}
                             eventKey={stud._id}
@@ -352,8 +366,8 @@ function App() {
                             <Card.Body>
                               <p>Batch: {stud.batch}</p>
                               <p>Skills: </p>
-                              {stud.skills.map((skill) => (
-                                <p>{skill}</p>
+                              {stud.skills.map((skill, ind) => (
+                                <p key={ind}>{skill}</p>
                               ))}
                             </Card.Body>
                           </Accordion.Collapse>
@@ -365,7 +379,6 @@ function App() {
               </Card.Body>
             </Card>
           </Col>
-          
         </Row>
       </Container>
     </div>
