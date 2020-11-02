@@ -1,0 +1,1 @@
+a basic mern stack dashboard to show college details
