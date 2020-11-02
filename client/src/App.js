@@ -5,8 +5,12 @@ import axios from 'axios'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import Card from 'react-bootstrap/Card'
+import Container from 'react-bootstrap/Container'
 import ListGroup from 'react-bootstrap/ListGroup'
 import Accordion from 'react-bootstrap/Accordion'
+import Sonnet from "./Sonnet"
+import Tabs from "react-bootstrap/Tabs"
+import Tab from "react-bootstrap/Tab"
 function App() {
 
   const [courseData, setCourseData] = useState()
@@ -94,103 +98,124 @@ function App() {
 
   return (
     <div className="App">
-      <Row>
-        <Col xs={4}>
-          {/* Shows the course distribution chart */}
-          <Card style={{ width: '30vw' }}>
-            <Card.Body>
-              <Card.Title>Colleges by Course</Card.Title>
-              <Card.Subtitle className="mb-2 text-muted">Shows the distribution by course</Card.Subtitle>
-              <div style={{ height: 300, width: 300 }}>
-                {courseData ?
-                  <Pie
-                    data={courseData}
-
-                    options={{
-             
-                      maintainAspectRatio: false,
-         onClick: function (e, element) {
-
-                        if (element.length > 0) {
-                          let ind = element[0];
-
-                          console.log(courseData.labels[ind._index])
-                          getColleges(courseData.labels[ind._index])
-                        }
-                      }
-                    }}>
-                  </Pie> : null}
-              </div>
-            </Card.Body>
-          </Card>
-          {/* Shows the state distribution chart */}
-          <Card style={{ width: '30vw' }}>
-            <Card.Body>
-              <Card.Title>Colleges by state</Card.Title>
-              <Card.Subtitle className="mb-2 text-muted">Shows the distribution by state</Card.Subtitle>
-
-              <div style={{ height: 300, width: 300 }}>
-                {stateData ? <Pie data={stateData} options={{
-                  onClick: function (e, element) {
-                    if (element.length > 0) {
-                      let ind = element[0];                      
-                      console.log(stateData.labels[ind._index])
-                      getColleges("", stateData.labels[ind._index])
-                    }
-                  }, responsive: true, maintainAspectRatio: false
-                }}></Pie> : null}
-              </div>
-            </Card.Body>
-          </Card>
-        </Col>
-        <Col xs={8}>
-          <Row>
-            <Col xs={4}>
-              {/* Shows list of colleges */}
-              <Card style={{ width: '18rem'}}>
-                <Card.Header><h3>Colleges</h3></Card.Header>
-                <ListGroup variant="flush">
-                  {colleges ? colleges.map(clg => <ListGroup.Item className="collegeList" onClick={(e) => handleClick(e)} id={clg._id}>{clg.name}</ListGroup.Item>) : null}
-                </ListGroup>
-              </Card>
-            </Col>
-            <Col xs={8}>
-              {/* Shows individual college details */}
-              <h3>College details</h3>
-
-              {college ?
-                <div>
-                  <p>{college.college.name} was founded in {college.college.founded} in {college.college.city}, {college.college.state}. It has {college.college.studentCount} students and offers {college.college.courses.map(crs => <span>{crs} </span>)}</p>
-
-                  {college.similarColleges.length ? <p>Similar colleges in the same city with similar student count and  offered courses, are {college.similarColleges.map(clg => (<span>{clg.name}, </span>))} </p> : <p>There are no similar colleges</p>}
-
-                  <h6>The students of this college are : </h6>
-                  <br></br>
-                  <Accordion defaultActiveKey="0">
-                    {college.students.map(stud => (
-                      <Card>
-                        <Accordion.Toggle as={Card.Header} eventKey={stud._id}>
-                          {stud.name}
-                        </Accordion.Toggle>
-                        <Accordion.Collapse eventKey={stud._id}>
-                          <Card.Body>
-                            <p>Batch: {stud.batch}</p>
-                            <p>Skills: </p>{stud.skills.map(skill => (<p>{skill}</p>))}
-                          </Card.Body>
-                        </Accordion.Collapse>
-                      </Card>
-                    ))}
-                  </Accordion>
-                </div>
-                :
-                null
-              }
-            </Col>
+      <Container style={{ margin: 0, width:"100%"}}>
+        <Row style={{ paddingLeft: "1%" }}>
+          <Col xs={5} >
             <br></br>
+
+            <Card style={{ borderRadius: 10 }}>
+              <Card.Body>
+                <Tabs style={{ padding: '0px 15px 15px 15px' }} justify defaultActiveKey="course" id="uncontrolled-tab-example">
+                  <Tab eventKey="course" title="by Course">
+                    {/* Shows the course distribution chart */}
+                    <Card style={{ borderRadius: 15 }}>
+                      <Card.Body>
+
+                        <Card.Subtitle className="mb-2 text-muted">Shows the college distribution by course</Card.Subtitle>
+                        <hr></hr>
+                        <div style={{ height: '30vh' }}>
+                          {courseData ?
+                            <Pie
+                              data={courseData}
+
+                              options={{
+                                responsive: true,
+
+
+                                maintainAspectRatio: false,
+                                onClick: function (e, element) {
+
+                                  if (element.length > 0) {
+                                    let ind = element[0];
+
+                                    console.log(courseData.labels[ind._index])
+                                    getColleges(courseData.labels[ind._index])
+                                  }
+                                }
+                              }}>
+                            </Pie> : null}
+                        </div>
+                      </Card.Body>
+                    </Card>
+
+                  </Tab>
+                  <Tab eventKey="state" title="by State">
+                    {/* Shows the state distribution chart */}
+                    <Card style={{ borderRadius: 15 }}>
+                      <Card.Body>
+
+                        <Card.Subtitle className="mb-2 text-muted">Shows the college distribution by state</Card.Subtitle>
+                        <hr></hr>
+
+                        <div style={{ height: '30vh' }}>
+                          {stateData ? <Pie data={stateData} options={{
+                            onClick: function (e, element) {
+                              if (element.length > 0) {
+                                let ind = element[0];
+                                console.log(stateData.labels[ind._index])
+                                getColleges("", stateData.labels[ind._index])
+                              }
+                            }, responsive: true, maintainAspectRatio: false
+                          }}></Pie> : null}
+                        </div>
+                      </Card.Body>
+                    </Card>
+                  </Tab>
+
+                </Tabs>
+              </Card.Body>
+            </Card>
             <br></br>
-          </Row>
-        </Col>
-      </Row>
+            {/* Shows list of colleges */}
+            <Card style={{ height: "35vh", borderRadius: 5 }}>
+              <Card.Header><h3 style={{ fontSize: "2rem" }}>Colleges</h3></Card.Header>
+              <ListGroup variant="flush" style={{ 'overflow-y': 'auto' }}>
+                {colleges ? colleges.map(clg => <ListGroup.Item className="collegeList" onClick={(e) => handleClick(e)} id={clg._id}>{clg.name}</ListGroup.Item>) : null}
+              </ListGroup>
+            </Card>
+
+          </Col>
+          <Col xs={7}>
+            <br></br>
+            
+                {/* Shows individual college details */}
+                <Card style={{ height: "95%", width:"100%",marginLeft:"30%"}}>
+                  <Card.Header><h3>College details</h3></Card.Header>
+
+                  {college ?
+                    <div style={{ padding: "4%" }}>
+                      <p>{college.college.name} was founded in {college.college.founded} in {college.college.city}, {college.college.state}. It has {college.college.studentCount} students and offers {college.college.courses.map(crs => <span>{crs} </span>)}</p>
+
+                      {college.similarColleges.length ? <p>Similar colleges in the same city with similar student count and  offered courses, are {college.similarColleges.map(clg => (<span>{clg.name}, </span>))} </p> : <p>There are no similar colleges</p>}
+
+                      <h6>The students of this college are : </h6>
+                      <br></br>
+                      <Accordion style={{ width: "80%", marginLeft: "10%" }} defaultActiveKey="0">
+                        {college.students.map(stud => (
+                          <Card>
+                            <Accordion.Toggle as={Card.Header} eventKey={stud._id}>
+                              {stud.name}
+                            </Accordion.Toggle>
+                            <Accordion.Collapse eventKey={stud._id}>
+                              <Card.Body>
+                                <p>Batch: {stud.batch}</p>
+                                <p>Skills: </p>{stud.skills.map(skill => (<p>{skill}</p>))}
+                              </Card.Body>
+                            </Accordion.Collapse>
+                          </Card>
+                        ))}
+                      </Accordion>
+                    </div>
+                    :
+                    null
+                  }
+                </Card>
+              </Col>
+              <br></br>
+              <br></br>
+            
+        </Row>
+      </Container>
     </div>
   );
 }
