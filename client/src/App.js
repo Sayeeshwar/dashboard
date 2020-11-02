@@ -1,56 +1,55 @@
-import './App.css';
-import { useEffect, useState } from 'react'
-import { Pie } from "react-chartjs-2"
-import axios from 'axios'
-import Row from 'react-bootstrap/Row'
-import Col from 'react-bootstrap/Col'
-import Card from 'react-bootstrap/Card'
-import Container from 'react-bootstrap/Container'
-import ListGroup from 'react-bootstrap/ListGroup'
-import Accordion from 'react-bootstrap/Accordion'
-import Sonnet from "./Sonnet"
-import Tabs from "react-bootstrap/Tabs"
-import Tab from "react-bootstrap/Tab"
+import "./App.css";
+import { useEffect, useState } from "react";
+import { Pie } from "react-chartjs-2";
+import axios from "axios";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
+import Card from "react-bootstrap/Card";
+import Container from "react-bootstrap/Container";
+import ListGroup from "react-bootstrap/ListGroup";
+import Accordion from "react-bootstrap/Accordion";
+import Navbar from "react-bootstrap/Navbar";
+import Tabs from "react-bootstrap/Tabs";
+import Tab from "react-bootstrap/Tab";
 function App() {
+  const [courseData, setCourseData] = useState();
 
-  const [courseData, setCourseData] = useState()
+  const [stateData, setStateData] = useState();
 
-  const [stateData, setStateData] = useState()
-
-  const [colleges, setColleges] = useState()
-  const [collegeId, setCollegeId] = useState()
-  const [college, setCollege] = useState()
+  const [colleges, setColleges] = useState();
+  const [collegeId, setCollegeId] = useState();
+  const [college, setCollege] = useState();
 
   async function getClgDetails() {
     if (collegeId) {
       console.log("gonna call /clg using", collegeId);
-      let response = await axios.post('/clg', { cid: collegeId })
-      let data = response.data
+      let response = await axios.post("/clg", { cid: collegeId });
+      let data = response.data;
       console.log("ind clg data: ", data.data);
-      setCollege(data.data)
+      setCollege(data.data);
     }
   }
 
   function handleClick(e) {
-    setCollegeId(e.target.getAttribute('id'))
+    setCollegeId(e.target.getAttribute("id"));
     let elements = document.getElementsByClassName("collegeList");
     for (var i = 0; i < elements.length; i++) {
       elements[i].style.backgroundColor = "white";
     }
-    e.target.style.backgroundColor = "gray"
+    e.target.style.backgroundColor = "gray";
   }
 
   async function getColleges(crs = "", st = "") {
-    let response = await axios.post('/clglist', { course: crs, state: st })
-    let data = response.data
+    let response = await axios.post("/clglist", { course: crs, state: st });
+    let data = response.data;
     console.log(data.colleges);
-    setColleges(data.colleges)
-    setCollegeId(data.colleges[0]._id)
+    setColleges(data.colleges);
+    setCollegeId(data.colleges[0]._id);
   }
 
   async function byCourse() {
-    let response = await axios.get('/CollegesByCourse')
-    let data = response.data
+    let response = await axios.get("/CollegesByCourse");
+    let data = response.data;
     setCourseData({
       labels: data.courses,
       datasets: [
@@ -58,162 +57,295 @@ function App() {
           label: "Course distribution",
           data: data.courseCount,
           backgroundColor: [
-            "#000000", "#FF1000", "#00FF00", "#C0C0C0", "#FF0000", "#00FFFF"
-          ]
-        }
-      ]
-    })
+            "#BED9F4",
+            "#5EADD6",
+            "#F0E0ED",
+            "#F3DB9A",
+            "#C0CF8B",
+            "#F69163",
+          ],
+        },
+      ],
+    });
   }
 
   async function byState() {
-    let response = await axios.get('/CollegesByState')
-    let data = response.data
+    let response = await axios.get("/CollegesByState");
+    let data = response.data;
     setStateData({
       labels: data.states,
       datasets: [
         {
           label: "State distribution",
           data: data.stateCount,
-          backgroundColor: [
-            "#BED9F4", "#5EADD6", "#F0E0ED"
-          ]
-        }
-      ]
-    })
+          backgroundColor: ["#BED9F4", "#5EADD6", "#F0E0ED"],
+        },
+      ],
+    });
   }
 
   useEffect(() => {
-    byCourse()
-    byState()
-  }, [])
+    byCourse();
+    byState();
+  }, []);
 
   useEffect(() => {
-    getColleges()
-
-  }, [])
+    getColleges();
+  }, []);
 
   useEffect(() => {
-    getClgDetails()
-  }, [collegeId])
+    getClgDetails();
+  }, [collegeId]);
 
   return (
     <div className="App">
-      <Container style={{ margin: 0, width:"100%"}}>
-        <Row style={{ paddingLeft: "1%" }}>
-          <Col xs={5} >
+      <Container style={{ margin: 0 }} fluid>
+        <Navbar
+          style={{ borderRadius: "5px 5px 0px 0px", marginTop: 5 }}
+          bg="light"
+          variant="light"
+        >
+          <Navbar.Brand
+            style={{ marginLeft: "1vh" }}
+            href="https://www.oneshot.ai/"
+            target="_blank"
+          >
+            <img
+              alt=""
+              height="35"
+              src="https://static.wixstatic.com/media/49f65e_70274cd34114455598ce1a2c26329b6c~mv2.png/v1/fill/w_154,h_55,al_c,q_85,usm_0.66_1.00_0.01/OneShotai_logowhite_edited.webp"
+              className="d-inline-block align-top"
+            />{" "}
+          </Navbar.Brand>
+          <Navbar.Text style={{ marginLeft: "1vh" }}>
+            <h5>College Dashboard</h5>
+          </Navbar.Text>
+          <Navbar.Collapse className="justify-content-end">
+            <Navbar.Text>
+              Developed by :{" "}
+              <a href="http://www.github.com/Sayeeshwar" target="_blank">
+                Sayeeshwar Girish
+              </a>
+            </Navbar.Text>
+          </Navbar.Collapse>
+        </Navbar>
+
+        <Navbar
+          style={{
+            borderRadius: "0px 0px 5px 5px",
+            borderTop: "1px solid black",
+          }}
+          bg="light"
+          variant="light"
+        >
+          <Navbar.Text>
+            <h5>Explore all the colleges in the country.</h5>
+          </Navbar.Text>
+        </Navbar>
+        <Row>
+          <Col xs={5}>
             <br></br>
 
             <Card style={{ borderRadius: 10 }}>
               <Card.Body>
-                <Tabs style={{ padding: '0px 15px 15px 15px' }} justify defaultActiveKey="course" id="uncontrolled-tab-example">
+                <Tabs
+                  style={{ padding: "0px 15px 15px 15px" }}
+                  justify
+                  defaultActiveKey="course"
+                  id="uncontrolled-tab-example"
+                >
                   <Tab eventKey="course" title="by Course">
                     {/* Shows the course distribution chart */}
                     <Card style={{ borderRadius: 15 }}>
                       <Card.Body>
-
-                        <Card.Subtitle className="mb-2 text-muted">Shows the college distribution by course</Card.Subtitle>
+                        <Card.Subtitle className="mb-2 text-muted">
+                          College distribution by course
+                        </Card.Subtitle>
                         <hr></hr>
-                        <div style={{ height: '30vh' }}>
-                          {courseData ?
+                        <div style={{ height: "20vh" }}>
+                          {courseData ? (
                             <Pie
                               data={courseData}
-
                               options={{
                                 responsive: true,
-
+                                legend: {
+                                  display: false,
+                                },
 
                                 maintainAspectRatio: false,
                                 onClick: function (e, element) {
-
                                   if (element.length > 0) {
                                     let ind = element[0];
 
-                                    console.log(courseData.labels[ind._index])
-                                    getColleges(courseData.labels[ind._index])
+                                    console.log(courseData.labels[ind._index]);
+                                    getColleges(courseData.labels[ind._index]);
                                   }
-                                }
-                              }}>
-                            </Pie> : null}
+                                },
+                              }}
+                            ></Pie>
+                          ) : null}
                         </div>
                       </Card.Body>
                     </Card>
-
                   </Tab>
                   <Tab eventKey="state" title="by State">
                     {/* Shows the state distribution chart */}
                     <Card style={{ borderRadius: 15 }}>
                       <Card.Body>
-
-                        <Card.Subtitle className="mb-2 text-muted">Shows the college distribution by state</Card.Subtitle>
+                        <Card.Subtitle className="mb-2 text-muted">
+                          College distribution by state
+                        </Card.Subtitle>
                         <hr></hr>
 
-                        <div style={{ height: '30vh' }}>
-                          {stateData ? <Pie data={stateData} options={{
-                            onClick: function (e, element) {
-                              if (element.length > 0) {
-                                let ind = element[0];
-                                console.log(stateData.labels[ind._index])
-                                getColleges("", stateData.labels[ind._index])
-                              }
-                            }, responsive: true, maintainAspectRatio: false
-                          }}></Pie> : null}
+                        <div style={{ height: "20vh" }}>
+                          {stateData ? (
+                            <Pie
+                              data={stateData}
+                              options={{
+                                onClick: function (e, element) {
+                                  if (element.length > 0) {
+                                    let ind = element[0];
+                                    console.log(stateData.labels[ind._index]);
+                                    getColleges(
+                                      "",
+                                      stateData.labels[ind._index]
+                                    );
+                                  }
+                                },
+                                responsive: true,
+                                maintainAspectRatio: false,
+                                legend: {
+                                  display: false,
+                                },
+                              }}
+                            ></Pie>
+                          ) : null}
                         </div>
                       </Card.Body>
                     </Card>
                   </Tab>
-
                 </Tabs>
+                <i>Click on a slice to filter the colleges list below</i>
               </Card.Body>
             </Card>
-            <br></br>
+
             {/* Shows list of colleges */}
-            <Card style={{ height: "35vh", borderRadius: 5 }}>
-              <Card.Header><h3 style={{ fontSize: "2rem" }}>Colleges</h3></Card.Header>
-              <ListGroup variant="flush" style={{ 'overflow-y': 'auto' }}>
-                {colleges ? colleges.map(clg => <ListGroup.Item className="collegeList" onClick={(e) => handleClick(e)} id={clg._id}>{clg.name}</ListGroup.Item>) : null}
+            <Card style={{ height: "25vh", marginTop: "5px", borderRadius: 5 }}>
+              <Card.Header>
+                <h5>Colleges</h5>
+              </Card.Header>
+              <ListGroup variant="flush" style={{ "overflow-y": "auto" }}>
+                {colleges
+                  ? colleges.map((clg) => (
+                      <ListGroup.Item
+                        className="collegeList"
+                        onClick={(e) => handleClick(e)}
+                        id={clg._id}
+                      >
+                        {clg.name}
+                      </ListGroup.Item>
+                    ))
+                  : null}
               </ListGroup>
             </Card>
-
           </Col>
           <Col xs={7}>
             <br></br>
-            
-                {/* Shows individual college details */}
-                <Card style={{ height: "95%", width:"100%",marginLeft:"30%"}}>
-                  <Card.Header><h3>College details</h3></Card.Header>
 
-                  {college ?
-                    <div style={{ padding: "4%" }}>
-                      <p>{college.college.name} was founded in {college.college.founded} in {college.college.city}, {college.college.state}. It has {college.college.studentCount} students and offers {college.college.courses.map(crs => <span>{crs} </span>)}</p>
-
-                      {college.similarColleges.length ? <p>Similar colleges in the same city with similar student count and  offered courses, are {college.similarColleges.map(clg => (<span>{clg.name}, </span>))} </p> : <p>There are no similar colleges</p>}
-
-                      <h6>The students of this college are : </h6>
-                      <br></br>
-                      <Accordion style={{ width: "80%", marginLeft: "10%" }} defaultActiveKey="0">
-                        {college.students.map(stud => (
-                          <Card>
-                            <Accordion.Toggle as={Card.Header} eventKey={stud._id}>
-                              {stud.name}
-                            </Accordion.Toggle>
-                            <Accordion.Collapse eventKey={stud._id}>
-                              <Card.Body>
-                                <p>Batch: {stud.batch}</p>
-                                <p>Skills: </p>{stud.skills.map(skill => (<p>{skill}</p>))}
-                              </Card.Body>
-                            </Accordion.Collapse>
-                          </Card>
+            {/* Shows individual college details */}
+            <Card
+              style={{
+                height: "70vh",
+                width: "100%",
+                borderRadius: 5,
+                textAlign: "left",
+              }}
+            >
+              <Card.Header style={{ textAlign: "center" }}>
+                <h3>College details</h3>
+              </Card.Header>
+              <Card.Body style={{ "overflow-y": "auto" }}>
+                {college ? (
+                  <div style={{ padding: "1% 4% 4% 4%" }}>
+                    <p>
+                      <h1
+                        style={{
+                          textAlign: "center",
+                          textDecoration: "underline",
+                        }}
+                      >
+                        <i>{college.college.name}</i>
+                      </h1>
+                      <ul>
+                        <li>
+                          was founded in {college.college.founded} in{" "}
+                          {college.college.city}, {college.college.state}.
+                        </li>
+                        <li>has {college.college.studentCount} students </li>
+                      </ul>
+                      <ListGroup horizontal>
+                        <ListGroup.Item>
+                          <h6>offers :</h6>
+                        </ListGroup.Item>
+                        {college.college.courses.map((crs) => (
+                          <ListGroup.Item>{crs} </ListGroup.Item>
                         ))}
-                      </Accordion>
-                    </div>
-                    :
-                    null
-                  }
-                </Card>
-              </Col>
-              <br></br>
-              <br></br>
-            
+                      </ListGroup>
+                    </p>
+                    <hr />
+                    {college.similarColleges.length ? (
+                      <div>
+                        <h6>
+                          Colleges in the same city of similar size and offered
+                          courses, are:
+                        </h6>
+                        <br />
+                        <ul>
+                          {college.similarColleges.map((clg) => (
+                            <li>{clg.name} </li>
+                          ))}
+                        </ul>
+                      </div>
+                    ) : (
+                      <p>There are no similar colleges</p>
+                    )}
+                    <hr />
+                    <h4 style={{ textAlign: "center" }}>
+                      The students of this college are :{" "}
+                    </h4>
+
+                    <br></br>
+                    <Accordion
+                      style={{ width: "80%", marginLeft: "10%" }}
+                      defaultActiveKey="0"
+                    >
+                      {college.students.map((stud) => (
+                        <Card>
+                          <Accordion.Toggle
+                            as={Card.Header}
+                            eventKey={stud._id}
+                          >
+                            {stud.name}
+                          </Accordion.Toggle>
+                          <Accordion.Collapse eventKey={stud._id}>
+                            <Card.Body>
+                              <p>Batch: {stud.batch}</p>
+                              <p>Skills: </p>
+                              {stud.skills.map((skill) => (
+                                <p>{skill}</p>
+                              ))}
+                            </Card.Body>
+                          </Accordion.Collapse>
+                        </Card>
+                      ))}
+                    </Accordion>
+                  </div>
+                ) : null}
+              </Card.Body>
+            </Card>
+          </Col>
+          <br></br>
+          <br></br>
         </Row>
       </Container>
     </div>
