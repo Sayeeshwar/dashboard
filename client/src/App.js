@@ -36,7 +36,7 @@ function App() {
     for (var i = 0; i < elements.length; i++) {
       elements[i].style.backgroundColor = "white";
     }
-    e.target.style.backgroundColor = "gray";
+    e.target.style.backgroundColor = "#5EADD6";
   }
 
   async function getColleges(crs = "", st = "") {
@@ -230,21 +230,42 @@ function App() {
             </Card>
 
             {/* Shows list of colleges */}
-            <Card style={{ height: "25vh", marginTop: "5px", borderRadius: 5 }}>
+            <Card style={{ height: "30vh", marginTop: "5px", borderRadius: 5 }}>
               <Card.Header>
-                <h5>Colleges</h5>
+                <p><h5>Colleges</h5> (Pick a college to see its details)</p>
+
               </Card.Header>
               <ListGroup variant="flush" style={{ "overflow-y": "auto" }}>
                 {colleges
-                  ? colleges.map((clg) => (
-                      <ListGroup.Item
-                        className="collegeList"
-                        onClick={(e) => handleClick(e)}
-                        id={clg._id}
-                      >
-                        {clg.name}
-                      </ListGroup.Item>
-                    ))
+                  ? colleges.map((clg,ind) => {
+                    if(!ind){
+                      return(
+                    
+                        <ListGroup.Item
+                          className="collegeList"
+                          onClick={(e) => handleClick(e)}
+                          id={clg._id}
+                          style={{backgroundColor:"#5EADD6"}}
+                        >
+                          {clg.name}
+                        </ListGroup.Item>)
+
+                    }
+                    else{
+                      return(
+                    
+                        <ListGroup.Item
+                          className="collegeList"
+                          onClick={(e) => handleClick(e)}
+                          id={clg._id}
+                          
+                        >
+                          {clg.name}
+                        </ListGroup.Item>)
+                      
+                    }
+                    
+})
                   : null}
               </ListGroup>
             </Card>
@@ -255,7 +276,7 @@ function App() {
             {/* Shows individual college details */}
             <Card
               style={{
-                height: "70vh",
+                height: "75vh",
                 width: "100%",
                 borderRadius: 5,
                 textAlign: "left",
@@ -300,11 +321,11 @@ function App() {
                           courses, are:
                         </h6>
                         <br />
-                        <ul>
+                        <ListGroup horizontal>
                           {college.similarColleges.map((clg) => (
-                            <li>{clg.name} </li>
+                            <ListGroup.Item>{clg.name} </ListGroup.Item>
                           ))}
-                        </ul>
+                        </ListGroup>
                       </div>
                     ) : (
                       <p>There are no similar colleges</p>
@@ -344,8 +365,7 @@ function App() {
               </Card.Body>
             </Card>
           </Col>
-          <br></br>
-          <br></br>
+          
         </Row>
       </Container>
     </div>
