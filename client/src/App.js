@@ -164,7 +164,7 @@ function App() {
                   defaultActiveKey="course"
                   id="uncontrolled-tab-example"
                 >
-                  <Tab eventKey="course" title="by Course">
+                  <Tab eventKey="course" title="Course">
                     {/* Shows the course distribution chart */}
                     <Card style={{ borderRadius: 15 }}>
                       <Card.Body>
@@ -198,7 +198,7 @@ function App() {
                       </Card.Body>
                     </Card>
                   </Tab>
-                  <Tab eventKey="state" title="by State">
+                  <Tab eventKey="state" title="State">
                     {/* Shows the state distribution chart */}
                     <Card style={{ borderRadius: 15 }}>
                       <Card.Body>
@@ -303,11 +303,11 @@ function App() {
                   <div style={{ padding: "1% 4% 4% 4%" }}>
                     <h1
                       style={{
-                        textAlign: "center",
-                        textDecoration: "underline",
+                        textAlign: "left",
+                        
                       }}
                     >
-                      <i>{college.college.name}</i>
+                      {college.college.name}
                     </h1>
                     <ul>
                       <li>
@@ -326,13 +326,14 @@ function App() {
                     </ul>
 
                     <hr />
-                    {college.similarColleges.length ? (
-                      <div>
-                        <h6>
+                    <h6>
                           Colleges in the same city of similar size and offered
                           courses, are:
                         </h6>
                         <br />
+                    {college.similarColleges.length ? (
+                      <div>
+                        
                         <ListGroup horizontal>
                           {college.similarColleges.map((clg, ind) => (
                             <ListGroup.Item key={ind}>
